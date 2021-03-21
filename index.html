@@ -1,13 +1,27 @@
 <html>
+  <style>
+    .actionDiv {
+      width: 200px;
+      height: 50px;
+      visibility: hidden;
+    }
+  </style>
   <body>
-    <table>
-      <tr><td><a href="javascript:init()">start</a></td></tr>
-      <tr><td><div id="release"/></td></tr>
-      <tr><td><div id="sprint"/></td></tr>
-      <tr><td><div id="turn"/></td></tr>
-      <tr><td><div id="action"/></td></tr>
-      <tr><td><div id="release"/></td></tr>
-    </table>
+    <div style="background-color: red; height: 100px; width: 100%;">
+      <a href="javascript:init()">start</a>
+      <div id="turnIndex"></div>
+    </div>
+    <div style="background-color: green; height: 100px; width: 20%; float: left; clear: both;"></div>
+    <div style="background-color: blue; height: 100px; width: 20%; float: left; clear: both;"></div>
+    <div style="background-color: yellow; height: 100px; width: 20%; float: left; clear: both;"></div>
+    <div style="background-color: violet; height: 300px; top: -200px; width: 80%; float: left; position: relative;">
+      <div id="actionDrawActionCard" class="actionDiv" style="background-color: teal;" ></div>
+      <div id="actionDrawIncidentCard" class="actionDiv" style="background-color: thistle;" ></div>
+      <div id="actionPlayCard" class="actionDiv" style="background-color: tomato;" ></div>
+      <div id="actionEndTurn" class="actionDiv" style="background-color: turquoise;" ></div>
+      <div id="sprintPlanning" class="actionDiv" style="background-color: turquoise;" ></div>
+      <div id="sprintReview" class="actionDiv" style="background-color: turquoise;" ></div>
+    </div>
   </body>
   <script src="engine.js"></script>
   <script src="actions.js"></script>
