@@ -4,8 +4,14 @@ class Action{
     this.player = player;
   }
 }
+class Phase{
+  constructor(state, player){
+    this.state = state;
+    this.player = player;
+  }
+}
 
-class ScrumAction{
+class ScrumPhase{
   constructor(state, sprint){
     this.state = state;
     this.sprint = sprint;
@@ -13,13 +19,11 @@ class ScrumAction{
   }
   start(){}
 }
-class PlanningAction extends ScrumAction{
-
-
+class PlanningPhase extends ScrumPhase{
   start(){
     let endTurnDiv = document.getElementById("sprintPlanning");
     endTurnDiv.style.visibility = "visible"; 
-    endTurnDiv.innerHTML = "<a href=\"javascript:state.currentAction.startSprint()\">Start sprint</a>";
+    endTurnDiv.innerHTML = "<a href=\"javascript:state.currentPhase.startSprint()\">Start sprint</a>";
   }
   startSprint(){
     document.getElementById("sprintPlanning").style.visibility = "hidden";
@@ -27,11 +31,11 @@ class PlanningAction extends ScrumAction{
     this.state.startNextTurn();
   }
 }
-class ReviewAction extends ScrumAction{
+class ReviewPhase extends ScrumPhase{
   start(){
     let endTurnDiv = document.getElementById("sprintReview");
     endTurnDiv.style.visibility = "visible"; 
-    endTurnDiv.innerHTML = "<a href=\"javascript:state.currentAction.endSprint()\">End sprint</a>";
+    endTurnDiv.innerHTML = "<a href=\"javascript:state.currentPhase.endSprint()\">End sprint</a>";
   }
   endSprint(){
     document.getElementById("sprintReview").style.visibility = "hidden";
@@ -40,44 +44,61 @@ class ReviewAction extends ScrumAction{
   }
 }
 
-class EndTurnAction extends Action {
+class EndTurnPhase extends Phase {
   start(){
-    let endTurnDiv = document.getElementById("actionEndTurn");
+    let endTurnDiv = document.getElementById("phaseEndTurn");
     endTurnDiv.style.visibility = "visible"; 
     endTurnDiv.innerHTML = "<a href=\"javascript:state.currentTurn.currentAction.end()\">end turn</a>";
   }
   end(){
-    document.getElementById("actionEndTurn").style.visibility = "hidden";
+    document.getElementById("phaseEndTurn").style.visibility = "hidden";
     this.state.currentTurn.endTurn();
   }
 }
-class DrawActionCardAction extends Action {
+class DrawActionCardPhase extends Phase {
   start(){
-    let endTurnDiv = document.getElementById("actionDrawActionCard");
+    let endTurnDiv = document.getElementById("phaseDrawActionCard");
     endTurnDiv.style.visibility = "visible"; 
     endTurnDiv.innerHTML = "<a href=\"javascript:state.currentTurn.currentAction.end()\">draw action card</a>";
   }
   end(){
     var card = this.state.actionDeck.draw();
     this.player.addActionCard(card);
-    document.getElementById("actionDrawActionCard").style.visibility = "hidden";
+    document.getElementById("phaseDrawActionCard").style.visibility = "hidden";
     this.state.currentTurn.startNextAction();
   }
 }
-class DrawIncidentCardAction extends Action{
+class DrawIncidentCardPhase extends Phase{
   start(){
-    var endTurnDiv = document.getElementById("actionDrawIncidentCard");
+    let endTurnDiv = document.getElementById("phaseDrawIncidentCard");
     endTurnDiv.style.visibility = "visible"; 
     endTurnDiv.innerHTML = "<a href=\"javascript:state.currentTurn.currentAction.end()\">draw incident card</a>";
   }
   end(){
-    document.getElementById("actionDrawIncidentCard").style.visibility = "hidden";
+    document.getElementById("phaseDrawIncidentCard").style.visibility = "hidden";
+    this.state.currentTurn.startNextAction();
+  }
+}
+class PerformActionPhase extends Phase{
+  constructor(state, player){
+    super(state, player);
+    this.actions = [
+      new PlayCardAction(this.state, this.player),
+    ];
+  }
+  start(){
+    let endTurnDiv = document.getElementById("phasePerformAction");
+    endTurnDiv.style.visibility = "visible"; 
+    endTurnDiv.innerHTML = "<a href=\"javascript:state.currentTurn.currentAction.end()\">perform action</a>";
+  }
+  end(){
+    document.getElementById("phasePerformAction").style.visibility = "hidden";
     this.state.currentTurn.startNextAction();
   }
 }
 class PlayCardAction extends Action{
   start(){
-    var endTurnDiv = document.getElementById("actionPlayCard");
+    let endTurnDiv = document.getElementById("actionPlayCard");
     endTurnDiv.style.visibility = "visible"; 
     let cardLink = "";
     this.player.actionCards.forEach(card => {

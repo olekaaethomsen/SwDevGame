@@ -14,25 +14,26 @@ class GameState{
     this.incidentDeck = new Deck(incidentDeck);
     this.backLog = [];
     this.currentSprint = new Sprint(this);
-    this.currentAction;
+    this.currentPhase;
     this.startNextTurn();
   }
   startNextTurn(){
     if(this.currentSprint.isSprintEnded()){
-      this.setCurrentAction(new ReviewAction(this, this.currentSprint)); 
+      this.setCurrentPhase(new ReviewPhase(this, this.currentSprint)); 
     }
     else if(!this.currentSprint.isSprintStarted()){
-      this.setCurrentAction(new PlanningAction(this, this.currentSprint))
+      this.setCurrentPhase(new PlanningPhase(this, this.currentSprint))
     }
     else{
       console.log(`turn ${this.turnIndex}`);
       document.getElementById("turnIndex").innerText = this.turnIndex;
-      var player = this.players[this.turnIndex++ % this.players.length];
+      let player = this.players[this.turnIndex++ % this.players.length];
+      document.getElementById("activePlayer").innerText = player.name;
       this.currentTurn = new Turn(this, player);
     }
   }
-  setCurrentAction(action){
-    this.currentAction = action;
+  setCurrentPhase(phase){
+    this.currentPhase = phase;
   }
 
 }
@@ -41,15 +42,17 @@ class Turn{
     this.state = state;
     this.player = player;
     this.actions = [
-      new DrawActionCardAction(this.state, this.player),
-      new DrawIncidentCardAction(this.state, this.player),
-      new PlayCardAction(this.state, this.player),
-      new EndTurnAction(this.state, this.player)
+      new DrawActionCardPhase(this.state, this.player),
+      new DrawIncidentCardPhase(this.state, this.player),
+      new PerformActionPhase(this.state, this.player),
+      new EndTurnPhase(this.state, this.player)
     ];
+    
     this.actionIndex = 0;
     this.startNextAction();
   }
   startNextAction(){
+    
     this.currentAction = this.actions[this.actionIndex++];
     this.currentAction.start();
   }

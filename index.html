@@ -10,15 +10,18 @@
     <div style="background-color: red; height: 100px; width: 100%;">
       <a href="javascript:init()">start</a>
       <div id="turnIndex"></div>
+      <div id="activePlayer"></div>
     </div>
     <div style="background-color: green; height: 100px; width: 20%; float: left; clear: both;"></div>
     <div style="background-color: blue; height: 100px; width: 20%; float: left; clear: both;"></div>
     <div style="background-color: yellow; height: 100px; width: 20%; float: left; clear: both;"></div>
     <div style="background-color: violet; height: 300px; top: -200px; width: 80%; float: left; position: relative;">
-      <div id="actionDrawActionCard" class="actionDiv" style="background-color: teal;" ></div>
-      <div id="actionDrawIncidentCard" class="actionDiv" style="background-color: thistle;" ></div>
-      <div id="actionPlayCard" class="actionDiv" style="background-color: tomato;" ></div>
-      <div id="actionEndTurn" class="actionDiv" style="background-color: turquoise;" ></div>
+      <div id="phaseDrawActionCard" class="actionDiv" style="background-color: teal;" ></div>
+      <div id="phaseDrawIncidentCard" class="actionDiv" style="background-color: thistle;" ></div>
+      <div id="phasePerformAction" class="actionDiv" style="background-color: tomato;" >
+        <div id="actionPlayCard" class="actionDiv" style="background-color: yellowgreen;"></div>
+      </div>
+      <div id="phaseEndTurn" class="actionDiv" style="background-color: turquoise;" ></div>
       <div id="sprintPlanning" class="actionDiv" style="background-color: turquoise;" ></div>
       <div id="sprintReview" class="actionDiv" style="background-color: turquoise;" ></div>
     </div>
