@@ -1,10 +1,12 @@
 function init(){
   state = new GameState();
+  gui = new Gui();
 }
 const numberOfTurnsInSprint = 3;
 const numberOfSprintsInRelease = 2;
 const numberOfReleases = 3;
 let state;
+let gui;
 
 class GameState{
   constructor(){
@@ -15,6 +17,7 @@ class GameState{
     this.backLog = [];
     this.currentSprint = new Sprint(this);
     this.currentPhase;
+    this.release = new Release();
     this.startNextTurn();
   }
   startNextTurn(){
@@ -35,40 +38,48 @@ class GameState{
   setCurrentPhase(phase){
     this.currentPhase = phase;
   }
+  setCurrentAction(action){
+    this.currentAction = action;
+  }
 
 }
 class Turn{
   constructor(state, player){
     this.state = state;
     this.player = player;
-    this.actions = [
+    this.phases = [
       new DrawActionCardPhase(this.state, this.player),
-      new DrawIncidentCardPhase(this.state, this.player),
+      new DrawActionCardPhase(this.state, this.player),
       new PerformActionPhase(this.state, this.player),
+      new DrawIncidentCardPhase(this.state, this.player),
       new EndTurnPhase(this.state, this.player)
     ];
     
-    this.actionIndex = 0;
-    this.startNextAction();
+    this.phaseIndex = 0;
+    this.startNextPhase();
   }
-  startNextAction(){
-    
-    this.currentAction = this.actions[this.actionIndex++];
-    this.currentAction.start();
+  startNextPhase(){
+    this.currentPhase = this.phases[this.phaseIndex++];
+    this.state.setCurrentPhase(this.currentPhase);
+    gui.showPlayer(this.player);
+    gui.showSprint(state.currentSprint);
+    this.currentPhase.start();
   }
   endTurn(){
     this.state.startNextTurn();
   }
 }
-
 class Player{
   constructor(name){
     this.name = name;
     this.activeEffect = [];
-    this.actionCards = [];
+    this.actionCards = new Hand();
   }
   addActionCard(card){
-    this.actionCards.push(card);
+    this.actionCards.addCard(card);
+  }
+  getActionCard(index){
+    return this.actionCards.getCard(index);
   }
 }
 class Sprint{
@@ -101,7 +112,24 @@ class Sprint{
 class Release{
   constructor(){
     this.completedTasks = [];
-    this.technicalDebt =0;    
+    this.technicalDebt =0;
+    this.score = 0;    
+  }
+  addTask(task){
+    this.completedTasks.push(task);
+    this.score += task.score;
+  }
+  
+}
+class Hand{
+  constructor(){
+    this.cards = [];
+  }
+  addCard(card){
+    this.cards.push(card);
+  }
+  getCard(index){
+    return this.cards.splice(index,1)[0];
   }
 }
 
