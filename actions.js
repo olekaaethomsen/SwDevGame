@@ -21,11 +21,20 @@ class ScrumPhase{
 class PlanningPhase extends ScrumPhase{
   start(){
     let endTurnDiv = document.getElementById("sprintPlanning");
-    endTurnDiv.style.visibility = "visible"; 
+    endTurnDiv.style.visibility = "visible";
     endTurnDiv.innerHTML = "<a href=\"javascript:state.currentPhase.startSprint()\">Start sprint</a>";
+    let gui = new Gui();
+    gui.selectTaskFromBackLog(this.state); 
+  }
+  addTaskToSprint(taskIndex){
+    var task = this.state.backLog.splice(taskIndex, 1)[0];
+    this.sprint.addTaskToSprint(task);
+    gui.showBackLog(this.state);
+    gui.selectTaskFromBackLog(this.state);
   }
   startSprint(){
     gui.hideDiv("sprintPlanning");
+    gui.hideDiv("actionPlayCard");
     //document.getElementById("sprintPlanning").style.visibility = "hidden";
     this.sprint.startSprint();
     this.state.startNextTurn();
@@ -109,17 +118,6 @@ class PlayCardAction extends Action{
     let endTurnDiv = document.getElementById("actionPlayCard");
     endTurnDiv.style.visibility = "visible"; 
     gui.showCards(this.player.actionCards.cards);
-    // let cardLink = "";
-    
-    // let n = this.player.actionCards.cards.length;
-    // let i;
-    // for(i = 0;i<n;i++)
-    // {
-    //   let a = state.currentPhase.currentAction;
-    //   cardLink += `[<a href=\"javascript:state.currentPhase.currentAction.play(${i})">${i}</a>]`;   
-    // }
-    // endTurnDiv.innerHTML = cardLink;
-    //"<a href=\"javascript:state.currentTurn.currentPhase.currentAction.end()\">play card</a>";
   }
   play(cardIndex){
     let card = this.player.actionCards.getCard(cardIndex);
@@ -137,6 +135,7 @@ class PlayCardAction extends Action{
   }
   end(){
     document.getElementById("actionPlayCard").style.visibility = "hidden";
+    gui.hideDiv("actionPlayCard");
     this.state.currentTurn.currentPhase.end();
   }
 }
@@ -150,10 +149,12 @@ class EndTaskAction extends Action{
   finishTask(taskIndex){
     let task = this.state.currentSprint.tasks[taskIndex];
     task.finishTask();
-
+    this.end();
   }
   end(){
-    document.getElementById("actionEndTask").style.visibility = "hidden";
-    this.state.currentTurn.startNextPhase();
+    //document.getElementById("actionEndTask").style.visibility = "hidden";
+    gui.hideDiv("actionEndTask");
+    gui.hideDiv("actionPlayCard");
+    this.state.currentTurn.currentPhase.end();
   }
 }

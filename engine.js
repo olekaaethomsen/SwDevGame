@@ -15,6 +15,8 @@ class GameState{
     this.actionDeck = new Deck(actionDeck);
     this.incidentDeck = new Deck(incidentDeck);
     this.backLog = [];
+    this.backLog.push(this.actionDeck.draw().effect);
+    this.backLog.push(this.actionDeck.draw().effect);
     this.currentSprint = new Sprint(this);
     this.currentPhase;
     this.release = new Release();
@@ -63,6 +65,7 @@ class Turn{
     this.state.setCurrentPhase(this.currentPhase);
     gui.showPlayer(this.player);
     gui.showSprint(state.currentSprint);
+    gui.showBackLog(this.state);
     this.currentPhase.start();
   }
   endTurn(){

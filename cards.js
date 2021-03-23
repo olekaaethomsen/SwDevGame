@@ -45,6 +45,7 @@ class Deck{
     return this.deck;
   }
 }
+const actionStatus = { OnHold: 'onHold' , Active : 'active' , Done : 'done'};
 class Task{
   //feature, support, refactor
   //estimate delt op i refinement, development, salg? => feature ref+dev, support dev, refactor dev+salg (optional)
@@ -55,18 +56,30 @@ class Task{
     this.estimate = estimate;
     this.minEstimate = estimate - Math.round(estimate*0.2);
     this.maxEstimate = estimate + Math.round(estimate*0.2);
-    this.score = estimate;
+    this.score = score;
     this.workDone =0;
+    this.status = actionStatus.Active;
   }
   play(sprint){
-    sprint.addTaskToSprint(this);
+    state.backLog.push(this);
+    //sprint.addTaskToSprint(this);
   }
   addWork(sp)
   {
     this.workDone += sp;
   }
   finishTask(){
-    alert();
+    this.status = actionStatus.Done;
+  }
+  pauseTask(){
+    if(this.status == actionStatus.Active){
+      this.status = actionStatus.OnHold;
+    }
+  }
+  activateTask(){
+    if(this.status == actionStatus.OnHold){
+      this.status = actionStatus.Active;
+    }
 
   }
   name(){
